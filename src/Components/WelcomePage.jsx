@@ -1,7 +1,7 @@
-import { useState, useContext } from "react";
+import { useState } from "react";
 import fetchLocation from "../api";
 // import { LocationContext } from "../contexts/LocationContext";
-import { UserContext } from "../contexts/UserContext";
+
 import { useNavigate } from "react-router-dom";
 import {
   Form,
@@ -21,9 +21,7 @@ import catSitting from "../assets/cat-sitting.png";
 export default function WelcomePage({
   services,
   setServices,
-  location,
   setLocation,
-  test,
   postcode,
   setPostcode,
   neighbourhood,
@@ -44,10 +42,9 @@ export default function WelcomePage({
 
     setValidated(true);
     event.preventDefault();
-    console.log("services>>>", services);
+
     fetchLocation(postcode)
       .then((data) => {
-        console.log("data>>>", data);
         const neighbourhood = data.result.admin_ward;
         const latitude = data.result.latitude;
         const longitude = data.result.longitude;

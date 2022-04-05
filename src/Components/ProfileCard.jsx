@@ -46,14 +46,13 @@ export default function ProfileCard({
   }, [sitter_id]);
 
   //Select User new stuffs:
-  console.log("THIS IS USER FROM PROFILE-CARD==>", user);
+
   const user1 = user?.uid;
   const selectUser = async () => {
     setChat(prof);
-    console.log("PROF==>>", prof);
 
     const user2 = prof?.uid;
-    console.log(user2);
+
     const id = user1 > user2 ? `${user1 + user2}` : `${user2 + user1}`;
 
     const messagesRef = collection(db, "messages", id, "chat");
@@ -77,7 +76,7 @@ export default function ProfileCard({
   };
 
   // testing doc by id
-  console.log(prof, "profile");
+
   // const { name, bio } = prof;
   const handleMessage = () => {
     selectUser();
@@ -126,7 +125,9 @@ export default function ProfileCard({
                     {prof ? prof.bio : "This is the users bio within profile"}
                   </Card.Text>
                   <Card.Text className="p-2">
-                    {prof ? `£ ${prof.price} per day` : "The user has not set a price for their service yet"}
+                    {prof
+                      ? `£ ${prof.price} per day`
+                      : "The user has not set a price for their service yet"}
                   </Card.Text>
                 </Col>
                 <Col lg="2" className="p-3">

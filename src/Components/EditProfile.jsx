@@ -7,14 +7,7 @@ import {
   Image,
   Form,
 } from "react-bootstrap";
-import {
-  doc,
-  getDocs,
-  where,
-  collection,
-  query,
-  updateDoc,
-} from "firebase/firestore";
+import { doc, getDocs, collection, updateDoc } from "firebase/firestore";
 import profilePic from "../assets/blank-profile.png";
 import { useState } from "react";
 import { useEffect, useContext } from "react";
@@ -24,8 +17,8 @@ import dogIcon from "../assets/dogIcon.png";
 import catIcon from "../assets/catIcon.png";
 
 export default function EditProfile({ img, users, setUsers }) {
-  const { user, setUser } = useContext(UserContext);
-  const [prof, setProf] = useState(null);
+  const { user } = useContext(UserContext);
+  // const [prof, setProf] = useState(null);
   const [newName, setNewName] = useState("");
   const [newBio, setNewBio] = useState("");
   const [newPrice, setNewPrice] = useState("");
@@ -45,15 +38,14 @@ export default function EditProfile({ img, users, setUsers }) {
     setIsLoading(true);
     const getUsers = async () => {
       const data = await getDocs(usersCollectionRef);
-      console.log(data, "< data");
+
       setUsers(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
     };
     getUsers();
     setIsLoading(false);
-  }, []);
+  }, [setUsers, usersCollectionRef]);
 
   const usersCopy = [...users];
-  console.log(usersCopy, "users copy");
 
   const arr = usersCopy.filter((profile) => {
     // console.log(profile.uid);
@@ -61,17 +53,16 @@ export default function EditProfile({ img, users, setUsers }) {
   });
 
   const currentUser = arr[0];
-  console.log(currentUser, "<<< currentUser line 32");
+
   // console.log(sitter?.uid, "<<<sitter doc id");
 
   const userId = currentUser?.id;
-  console.log(userId, "sitterId variable");
 
   const handleNameUpdate = async (e) => {
     e.preventDefault();
     const updateRef = doc(db, "users", userId);
     // set state
-    const updated = await updateDoc(updateRef, {
+    await updateDoc(updateRef, {
       name: newName,
     });
     setNameEdit(false);
@@ -81,7 +72,7 @@ export default function EditProfile({ img, users, setUsers }) {
     e.preventDefault();
     const updateRef = doc(db, "users", userId);
     // set state
-    const updated = await updateDoc(updateRef, {
+    await updateDoc(updateRef, {
       bio: newBio,
     });
     setBioEdit(false);
@@ -91,7 +82,7 @@ export default function EditProfile({ img, users, setUsers }) {
     e.preventDefault();
     const updateRef = doc(db, "users", userId);
     // set state
-    const updated = await updateDoc(updateRef, {
+    await updateDoc(updateRef, {
       price: newPrice,
     });
     setPriceEdit(false);
@@ -101,7 +92,7 @@ export default function EditProfile({ img, users, setUsers }) {
     e.preventDefault();
     const updateRef = doc(db, "users", userId);
     // set state
-    const updated = await updateDoc(updateRef, {
+    await updateDoc(updateRef, {
       postcode: newPostcode,
     });
     setPostcodeEdit(false);
@@ -111,7 +102,7 @@ export default function EditProfile({ img, users, setUsers }) {
     e.preventDefault();
     const updateRef = doc(db, "users", userId);
     // set state
-    const updated = await updateDoc(updateRef, {
+    await updateDoc(updateRef, {
       isDogSitter: newDog,
     });
     setDogEdit(false);
@@ -121,7 +112,7 @@ export default function EditProfile({ img, users, setUsers }) {
     e.preventDefault();
     const updateRef = doc(db, "users", userId);
     // set state
-    const updated = await updateDoc(updateRef, {
+    await updateDoc(updateRef, {
       isCatSitter: newCat,
     });
     setCatEdit(false);
@@ -170,7 +161,7 @@ export default function EditProfile({ img, users, setUsers }) {
               <Row>
                 <Col xs="10">
                   <Card.Title className="p-1 mt-3">
-                    {currentUser ? currentUser.name : "Name Here"}
+                    {currentUser?.name}
                   </Card.Title>
                 </Col>
                 <Col xs="2">
@@ -212,11 +203,7 @@ export default function EditProfile({ img, users, setUsers }) {
               )}
               <Row>
                 <Col xs="10">
-                  <Card.Text className="p-2">
-                    {currentUser
-                      ? currentUser.bio
-                      : "User has not completed bio yet"}
-                  </Card.Text>
+                  <Card.Text className="p-2">{currentUser?.bio}</Card.Text>
                 </Col>
                 <Col xs="2">
                   <Button

@@ -1,20 +1,19 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useContext } from "react";
 import { db } from "../firebase-config";
-import { collection, getDocs, addDoc } from "firebase/firestore";
+import { collection, addDoc } from "firebase/firestore";
 import fetchLocation from "../api";
 import { useNavigate } from "react-router-dom";
-import { Form, Button, Container, Card, Row, Col } from "react-bootstrap";
-import { auth } from "../firebase-config";
+import { Form, Button, Container, Row, Col } from "react-bootstrap";
 import { UserContext } from "../contexts/UserContext";
 
 export default function UserDetailsInput({ postcode, setPostcode }) {
-  const { user, setUser } = useContext(UserContext);
+  const { user } = useContext(UserContext);
   const [newName, setNewName] = useState("");
   const [newPet, setNewPet] = useState("");
   const [error, setError] = useState(null);
 
   // const [location, setLocation] = useState([null, null]);
-  const [users, setUsers] = useState([]);
+  // const [users, setUsers] = useState([]);
   const [isSitter, setIsSitter] = useState(false);
   const [bio, setBio] = useState("");
 
@@ -52,21 +51,18 @@ export default function UserDetailsInput({ postcode, setPostcode }) {
       setPrice(0);
       navigate("/home");
     } catch (error) {
-      console.log(error.message);
       setError(error);
     }
   };
 
-  console.log(user, "state");
-
-  useEffect(() => {
-    // console.log("useEffect invoked")
-    const getUsers = async () => {
-      const data = await getDocs(usersCollectionRef);
-      setUsers(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-    };
-    getUsers();
-  }, []);
+  // useEffect(() => {
+  //   // console.log("useEffect invoked")
+  //   const getUsers = async () => {
+  //     const data = await getDocs(usersCollectionRef);
+  //     setUsers(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+  //   };
+  //   getUsers();
+  // }, [usersCollectionRef]);
 
   return (
     <Container className="justify-content-center text-center">

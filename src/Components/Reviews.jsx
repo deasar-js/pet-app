@@ -71,7 +71,6 @@ export default function Reviews({ users, setUsers }) {
   });
 
   const username = usersCopy.filter((profile) => {
-    console.log("profile: ", profile);
     return profile.uid === user?.uid;
   });
 

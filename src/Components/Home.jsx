@@ -1,12 +1,11 @@
 import React, { useEffect, useState, useContext } from "react";
 import { UserContext } from "../contexts/UserContext";
-import { collection, getDocs, addDoc } from "firebase/firestore";
+import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase-config";
 import fetchLocation from "../api";
 import dog from "../assets/dogIcon.png";
 import cat from "../assets/catIcon.png";
 import paw from "../assets/paw.png";
-import sidebar from "../assets/side.jpg";
 import CalculateDistance from "./CalculateDistance";
 import { Link, useNavigate } from "react-router-dom";
 import {
@@ -15,7 +14,6 @@ import {
   Card,
   Container,
   Image,
-  Alert,
   Form,
   Button,
   Nav,
@@ -36,7 +34,7 @@ export default function Home({
   neighbourhood,
   setNeighbourhood,
 }) {
-  const { user, setUser } = useContext(UserContext);
+  // const { user, setUser } = useContext(UserContext);
   const usersCollectionRef = collection(db, "users");
   //header search bar
   const [validated, setValidated] = useState(false);
@@ -44,7 +42,6 @@ export default function Home({
   const navigate = useNavigate();
   const ownerLocation = location;
 
-  console.log(">>>>> ", location);
   useEffect(() => {
     const getUsers = async () => {
       const data = await getDocs(usersCollectionRef);
@@ -52,8 +49,6 @@ export default function Home({
     };
     getUsers();
   }, []);
-
-  console.log(users, "<users state");
 
   const usersCopy = [...users];
   const sitters = usersCopy.filter((profile) => {
@@ -72,8 +67,6 @@ export default function Home({
     }
   });
 
-  console.log(sittersFilteredByServices, "<<< ");
-
   const sittersWithProximity = sittersFilteredByServices.map((sitter) => {
     const sitterLocation = sitter.location;
     sitter.proximity = CalculateDistance(ownerLocation, sitterLocation);
@@ -83,8 +76,6 @@ export default function Home({
   const sittersSortedByProximity = sittersWithProximity.sort((a, b) => {
     return a.proximity - b.proximity;
   });
-
-  console.log(sittersSortedByProximity, "< MAPPED OVER");
 
   //
   const handleSubmit = (event) => {
@@ -96,10 +87,9 @@ export default function Home({
     setError(false);
     setValidated(true);
     event.preventDefault();
-    console.log("services>>>", services);
+
     fetchLocation(postcode)
       .then((data) => {
-        console.log("data>>>", data);
         const neighbourhood = data.result.admin_ward;
         const latitude = data.result.latitude;
         const longitude = data.result.longitude;
@@ -107,10 +97,8 @@ export default function Home({
         setNeighbourhood(neighbourhood);
 
         setLocation(newLocation);
-        console.log("button/services >>>", services);
       })
       .catch((error) => {
-        console.log(error, "<message");
         setError(error);
       });
   };
@@ -142,7 +130,7 @@ export default function Home({
                 <Row className="justify-content-center">
                   <Col s="auto" md="auto" lg={4} className="my-1">
                     <Form.Control
-                      defaultValue={"N4 1DN"}
+                      // defaultValue={"N4 1DN"}
                       className="border-0"
                       type="text"
                       value={postcode}
@@ -152,12 +140,12 @@ export default function Home({
                   </Col>
                   <Col s="auto" md="auto" lg={4} className="my-1">
                     <Form.Select
-                      defaultValue={"Dog Sitting"}
+                      // defaultValue={"Dog Sitting"}
                       className="border-0"
                       value={services}
                       onChange={(e) => {
                         e.preventDefault(); // << necessary?
-                        console.log("eTargetValue >>>", e.target.value);
+
                         setServices(e.target.value);
                       }}
                     >
@@ -202,8 +190,7 @@ export default function Home({
                     sitter?.pawRating.reduce((part, a) => part + a, 0)) *
                     10
                 ) / 10;
-              console.log(sitterLocation, "<<< sitter location const");
-              console.log("sitter >>", sitter);
+
               return (
                 <Link
                   key={index}

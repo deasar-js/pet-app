@@ -37,9 +37,7 @@ export default function Inbox({ chat, setChat, messages, setMessages }) {
   const [text, setText] = useState("");
   const { user, setUser } = useContext(UserContext);
 
-  console.log("USER UID==>", user?.uid);
   const user1 = user?.uid;
-  // console.log(user1);
 
   useEffect(() => {
     async function fetchData() {
@@ -47,10 +45,10 @@ export default function Inbox({ chat, setChat, messages, setMessages }) {
       //create query object----line below queries users db EXCEPT for current logged in user
       const q = await query(usersRef, where("uid", "not-in", [user1]));
       //execute query
-      console.log("Q===>", q);
+
       const unsub = await onSnapshot(q, (querySnapshot) => {
         let users = [];
-        console.log("QUERY SNAPSHOT===>", querySnapshot);
+
         querySnapshot.forEach((doc) => {
           users.push(doc.data());
         });
@@ -68,7 +66,7 @@ export default function Inbox({ chat, setChat, messages, setMessages }) {
     setChat(user);
 
     const user2 = user.uid;
-    console.log(user2);
+
     const id = user1 > user2 ? `${user1 + user2}` : `${user2 + user1}`;
 
     const messagesRef = collection(db, "messages", id, "chat");
@@ -131,7 +129,7 @@ export default function Inbox({ chat, setChat, messages, setMessages }) {
                     width="25"
                     height="25"
                     fill="#fdba74"
-                    class="bi bi-chat-fill"
+                    className="bi bi-chat-fill"
                     viewBox="0 0 16 16"
                   >
                     <path d="M8 15c4.418 0 8-3.134 8-7s-3.582-7-8-7-8 3.134-8 7c0 1.76.743 3.37 1.97 4.6-.097 1.016-.417 2.13-.771 2.966-.079.186.074.394.273.362 2.256-.37 3.597-.938 4.18-1.234A9.06 9.06 0 0 0 8 15z" />
@@ -155,6 +153,7 @@ export default function Inbox({ chat, setChat, messages, setMessages }) {
                   <Nav className="justify-content-end flex-grow-1 pe-3">
                     {chatters.map((user) => (
                       <Card
+                        key={user.uid}
                         style={{ height: "80px" }}
                         className="m-1 border-0 border-bottom border-info shadow-sm"
                       >

@@ -29,7 +29,7 @@ export default function WelcomePage({
   neighbourhood,
   setNeighbourhood,
 }) {
-  const { user, setUser } = useContext(UserContext);
+  // const { user, setUser } = useContext(UserContext);
   const [validated, setValidated] = useState(false);
   const [error, setError] = useState(null);
 
@@ -95,7 +95,7 @@ export default function WelcomePage({
                 <Row className="justify-content-center">
                   <Col s="auto" md="auto" lg={4} className="my-1">
                     <Form.Control
-                      defaultValue={"N4 1DN"}
+                      // defaultValue={"N4 1DN"}
                       placeholder="Enter Postcode..."
                       className="border-0"
                       type="text"
@@ -105,7 +105,7 @@ export default function WelcomePage({
                   </Col>
                   <Col s="auto" md="auto" lg={4} className="my-1">
                     <Form.Select
-                      defaultValue={"Dog Sitting"}
+                      // defaultValue={"Dog Sitting"}
                       className="border-0"
                       value={services}
                       onChange={(e) => {

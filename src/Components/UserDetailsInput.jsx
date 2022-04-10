@@ -40,6 +40,7 @@ export default function UserDetailsInput({ postcode, setPostcode }) {
         location: [locationInfo.result.latitude, locationInfo.result.longitude],
         uid: user?.uid,
         pawRating: [0, 0, 0, 0, 0],
+        imageURL: "",
       });
 
       setNewName("");

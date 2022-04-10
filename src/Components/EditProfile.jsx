@@ -9,14 +9,14 @@ import {
 } from "react-bootstrap";
 import { doc, getDocs, collection, updateDoc } from "firebase/firestore";
 import profilePic from "../assets/blank-profile.png";
-import { useState } from "react";
-import { useEffect, useContext } from "react";
-import { db } from "../firebase-config";
+import { useState, useEffect, useContext, useRef } from "react";
+import { db, storage } from "../firebase-config";
 import { UserContext } from "../contexts/UserContext";
 import dogIcon from "../assets/dogIcon.png";
 import catIcon from "../assets/catIcon.png";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
-export default function EditProfile({ img, users, setUsers }) {
+export default function EditProfile({ users, setUsers }) {
   const { user } = useContext(UserContext);
   // const [prof, setProf] = useState(null);
   const [newName, setNewName] = useState("");
@@ -32,7 +32,10 @@ export default function EditProfile({ img, users, setUsers }) {
   const [catEdit, setCatEdit] = useState(false);
   const [dogEdit, setDogEdit] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [imageUpload, setImageUpload] = useState(null);
   const usersCollectionRef = collection(db, "users");
+
+  const inputRef = useRef();
 
   useEffect(() => {
     setIsLoading(true);
@@ -57,6 +60,29 @@ export default function EditProfile({ img, users, setUsers }) {
   // console.log(sitter?.uid, "<<<sitter doc id");
 
   const userId = currentUser?.id;
+
+  //image
+
+  const handleImageUpload = async () => {
+    console.log(imageUpload);
+    if (imageUpload == null) return;
+
+    try {
+      const imageRef = ref(storage, `images/${imageUpload.name + user?.uid}`);
+
+      await uploadBytes(imageRef, imageUpload);
+      alert("uploaded");
+      const image = await getDownloadURL(imageRef);
+      const updateRef = doc(db, "users", userId);
+      await updateDoc(updateRef, {
+        imageURL: image,
+      });
+    } catch (error) {
+      alert("failed");
+      console.log(error.message);
+    }
+    setImageUpload(null);
+  };
 
   const handleNameUpdate = async (e) => {
     e.preventDefault();
@@ -132,8 +158,49 @@ export default function EditProfile({ img, users, setUsers }) {
         <Card.Body>
           <Row>
             <Col md="4" lg="4">
-              <Image src={img ? img : profilePic} width="160" height="160" />
+              <Image
+                roundedCircle
+                src={currentUser?.imageURL ? currentUser?.imageURL : profilePic}
+                width="130"
+                height="130"
+              />
               <br />
+              <br />
+              {!imageUpload ? (
+                <>
+                  <Button
+                    style={{ color: "#fdba74" }}
+                    className="btn-light mb-3"
+                    onClick={() => inputRef.current.click()}
+                  >
+                    {" "}
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      fill="#fdba74"
+                      class="bi bi-camera"
+                      viewBox="0 0 16 16"
+                    >
+                      <path d="M15 12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h1.172a3 3 0 0 0 2.12-.879l.83-.828A1 1 0 0 1 6.827 3h2.344a1 1 0 0 1 .707.293l.828.828A3 3 0 0 0 12.828 5H14a1 1 0 0 1 1 1v6zM2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-1.172a2 2 0 0 1-1.414-.586l-.828-.828A2 2 0 0 0 9.172 2H6.828a2 2 0 0 0-1.414.586l-.828.828A2 2 0 0 1 3.172 4H2z" />
+                      <path d="M8 11a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5zm0 1a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM3 6.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0z" />
+                    </svg>{" "}
+                    Add photo
+                  </Button>
+
+                  <Form.Control
+                    className="d-none"
+                    ref={inputRef}
+                    type="file"
+                    size="sm"
+                    onChange={(event) => setImageUpload(event.target.files[0])}
+                  />
+                </>
+              ) : (
+                <Button className="btn-sign mb-3" onClick={handleImageUpload}>
+                  Upload & save
+                </Button>
+              )}
               <br />
               {currentUser && currentUser.pet === "Both" ? (
                 <>

@@ -201,7 +201,12 @@ export default function Home({
                     <Card.Body>
                       <Row>
                         <Col xs="3" sm="3" md="3" lg="3">
-                          <Image src={avatar} width="90" height="90" />
+                          <Image
+                            roundedCircle
+                            src={sitter?.imageURL ? sitter?.imageURL : avatar}
+                            width="90"
+                            height="90"
+                          />
                         </Col>
                         <Col xs="9" sm="5" md="5" lg="5" className="px-5">
                           <Card.Text>

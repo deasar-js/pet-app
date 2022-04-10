@@ -95,10 +95,15 @@ export default function ProfileCard({
             <Card.Body>
               <Row>
                 <Col>
-                  <Image src={img ? img : avatar} width="160" height="160" />
+                  <Image
+                    roundedCircle
+                    src={prof?.imageURL ? prof?.imageURL : avatar}
+                    width="130"
+                    height="130"
+                  />
                 </Col>
                 <Col md="9" lg="9">
-                  <Card.Title className="p-1">
+                  <Card.Title className="p-1 mt-3">
                     {prof ? prof.name : "Name Here"}
                   </Card.Title>
                   {prof && prof.pet === "Both" ? (

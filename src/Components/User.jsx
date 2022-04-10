@@ -2,8 +2,8 @@ import { onSnapshot, doc } from "firebase/firestore";
 import { useEffect, useState, useContext } from "react";
 import { db } from "../firebase-config";
 import { UserContext } from "../contexts/UserContext";
-import { Container } from "react-bootstrap";
-
+import { Container, Image } from "react-bootstrap";
+import avatar from "../assets/blank-profile.png";
 export default function User({ user, selectUser, user1, chat }) {
   const user2 = user?.uid;
   const [data, setData] = useState("");
@@ -30,23 +30,32 @@ export default function User({ user, selectUser, user1, chat }) {
         }}
       >
         <div className="user_info p-2">
+          <Image
+            src={user.imageURL || avatar}
+            height="55"
+            width="55"
+            roundedCircle
+          />
           <div className="">
-            <h6>{user.name}</h6>
+            <h6 className="justify-content-start px-5">
+              {user.name}{" "}
+              {data?.from !== user1 && data?.unread && (
+                <small className="unread">New</small>
+              )}
+            </h6>
+
+            {data && (
+              <p className="truncate px-5">
+                <strong>{data.from === user1 ? "sent:" : "received:"}</strong>
+                {data.text}
+              </p>
+            )}
             {/* <div
             className={`user_status ${user.isOnline ? "online" : "offline"}`}
           ></div> */}
           </div>
           {/* Line below shows most recent sent message truncated under the selected user. */}
-          {data?.from !== user1 && data?.unread && (
-            <small className="unread">New</small>
-          )}
         </div>
-        {data && (
-          <p className="truncate px-5">
-            <strong>{data.from === user1 ? "sent:" : "received:"}</strong>
-            {data.text}
-          </p>
-        )}
       </Container>
     </>
   );

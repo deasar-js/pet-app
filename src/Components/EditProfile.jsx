@@ -51,17 +51,11 @@ export default function EditProfile({ users, setUsers }) {
   const usersCopy = [...users];
 
   const arr = usersCopy.filter((profile) => {
-    // console.log(profile.uid);
     return profile.uid === user?.uid;
   });
 
   const currentUser = arr[0];
-
-  // console.log(sitter?.uid, "<<<sitter doc id");
-
   const userId = currentUser?.id;
-
-  //image
 
   const handleImageUpload = async () => {
     console.log(imageUpload);

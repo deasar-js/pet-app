@@ -12,12 +12,9 @@ export default function UserDetailsInput({ postcode, setPostcode }) {
   const [newPet, setNewPet] = useState("");
   const [error, setError] = useState(null);
 
-  // const [location, setLocation] = useState([null, null]);
-  // const [users, setUsers] = useState([]);
   const [isSitter, setIsSitter] = useState(false);
   const [bio, setBio] = useState("");
 
-  // const [services, setServices] = useState({dogsitting:false, catsitting:false })
   const [isDogSitter, setIsDogSitter] = useState(false);
   const [isCatSitter, setIsCatSitter] = useState(false);
   const [price, setPrice] = useState(0);

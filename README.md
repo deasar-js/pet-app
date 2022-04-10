@@ -30,3 +30,6 @@ This project is a React JS web app which uses Firebase for authentication, fires
 - Replace the filtering of large data-sets to more precise api queries to speed up load time
 - Add listing features and date-picker for availability and more detailed search
 - Order messages so most recent user interacted with is first
+
+## Minimum Version Requirements
+- Node.js: v17.3.0
